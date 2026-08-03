@@ -15,7 +15,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
   /* --------------------------------------------------------------
@@ -36,7 +36,7 @@
     --chrome-ink: #14161a;
     --ink:     #0c0d0f;
 
-    --display: "Bricolage Grotesque", system-ui, sans-serif;
+    --display: "Geist", system-ui, sans-serif;
     --ui: system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: "JetBrains Mono", ui-monospace, monospace;
 
@@ -140,24 +140,29 @@
 
   .hero {
     position: relative; min-height: 100svh; display: flex; flex-direction: column;
-    justify-content: center; overflow: hidden;
+    justify-content: center;
     padding: calc(var(--nav-h) + 48px) 0 clamp(48px, 8vh, 96px);
   }
-  /* spinning 3D model (video); screen-blend drops the near-black background */
+  /* spinning 3D model (video); lighten-blend removes the near-black background */
+  .hero__vidwrap { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; will-change: transform, opacity; }
   .hero__vid {
-    position: absolute; top: 50%; right: -10%; width: min(145vw, 2000px); z-index: 0;
+    position: absolute; top: 50%; right: -18%; width: min(188vw, 2700px);
     transform: translateY(-50%);
     opacity: 0.96; pointer-events: none; user-select: none;
     background: transparent;
-    mix-blend-mode: lighten; filter: saturate(1.12) contrast(1.05);
-    will-change: transform;
+    mix-blend-mode: lighten; filter: saturate(1.18) contrast(1.1);
   }
 
-  /* large tribal-chrome objects behind sections (parallax on pointer move) */
-  .sec-bg { position: absolute; z-index: 0; pointer-events: none; user-select: none; opacity: 0.3; filter: saturate(1.1); will-change: transform; }
-  .sec-bg--work { top: -6%; right: -20%; width: min(100vw, 1360px); }
-  .sec-bg--contact { bottom: -22%; right: -16%; width: min(104vw, 1460px); opacity: 0.34; }
-  @media (max-width: 720px) { .sec-bg { opacity: 0.15; } .hero__vid { opacity: 0.72; width: 210vw; right: -55%; } }
+  /* huge tribal-chrome objects behind sections, spread left AND right */
+  .sec-bg { position: absolute; z-index: 0; pointer-events: none; user-select: none; filter: saturate(1.28) contrast(1.1); will-change: transform; }
+  .sec-bg--work    { top: -12%;    left: -24%;  width: min(128vw, 1860px); opacity: 0.46; }
+  .sec-bg--about   { top: -18%;    right: -22%; width: min(112vw, 1580px); opacity: 0.34; }
+  .sec-bg--contact { bottom: -26%; left: -22%;  width: min(130vw, 1900px); opacity: 0.5; }
+  @media (max-width: 720px) {
+    .sec-bg { opacity: 0.2 !important; }
+    .hero__vid { opacity: 0.82; width: 250vw; right: -62%; }
+  }
+
   .hero__inner { position: relative; z-index: 2; }
 
   .hero__meta {
@@ -170,7 +175,7 @@
     padding-bottom: 0.06em;
   }
   .hero__title .l { display: block; }
-  .hero__title .l2 { color: transparent; -webkit-text-stroke: 1.5px var(--muted); }
+  .hero__title .l2 { color: var(--muted); }
 
   .hero__lower {
     display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
@@ -183,43 +188,64 @@
   @media (max-width: 560px) { .hero__star { opacity: 0.32; width: 78vw; right: -22%; } }
 
   /* ------------------------------- Section heads ------------------------------- */
-  section.block { position: relative; overflow: hidden; padding: clamp(84px, 15vh, 176px) 0; }
+  main { overflow-x: clip; }
+  section.block { position: relative; padding: clamp(84px, 15vh, 176px) 0; }
   .head { font-family: var(--display); font-weight: 600; letter-spacing: -0.035em; line-height: 1.0; font-size: clamp(2.2rem, 6vw, 4rem); margin-bottom: clamp(36px, 6vh, 64px); }
-  .head em { font-style: normal; color: transparent; -webkit-text-stroke: 1.4px var(--muted); }
+  .head em { font-style: normal; font-weight: 700; color: var(--text); }
 
   /* --------------------------- Work (no dividers) --------------------------- */
-  .work { list-style: none; display: flex; flex-direction: column; }
-  .proj a {
-    display: grid; grid-template-columns: 1fr auto; gap: 6px 28px; align-items: baseline;
-    padding: clamp(22px, 3.4vh, 40px) 22px; margin: 0 -22px; border-radius: 20px;
-    transition: background 0.4s var(--ease);
+  .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 860px) { .pgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .pgrid { grid-template-columns: 1fr; } }
+
+  .pcard {
+    position: relative; isolation: isolate; overflow: hidden;
+    display: flex; flex-direction: column; min-height: 288px; padding: 26px;
+    border-radius: 18px; border: 1px solid var(--line); background: #121316; color: inherit;
+    transition: transform 0.5s var(--spring), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
   }
-  .proj a:hover { background: var(--accent-soft); }
-  .proj__title {
-    font-family: var(--display); font-weight: 600; font-size: clamp(1.7rem, 4.4vw, 3.1rem);
-    letter-spacing: -0.03em; line-height: 1.0;
-    display: inline-flex; align-items: center; gap: 0.4em;
-    transition: transform 0.45s var(--spring), color 0.3s var(--ease);
-  }
-  .proj__title .ar { font-size: 0.5em; color: var(--faint); opacity: 0; transform: translateX(-8px); transition: opacity 0.35s var(--ease), transform 0.45s var(--spring); }
-  .proj a:hover .proj__title { transform: translateX(14px); }
-  .proj a:hover .proj__title .ar { opacity: 1; transform: translateX(0); color: var(--text); }
-  .proj__year { font-family: var(--mono); font-size: 0.9rem; color: var(--faint); font-variant-numeric: tabular-nums; }
-  .proj__desc { grid-column: 1 / -1; color: var(--muted); font-size: 1.05rem; max-width: 58ch; margin-top: 12px; text-wrap: pretty; }
-  @media (max-width: 620px) { .proj a { grid-template-columns: 1fr; gap: 4px; } .proj__year { order: -1; } }
+  .pcard:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.28); box-shadow: 0 30px 60px rgba(0,0,0,0.45); }
+  /* shimmer: a field of tiles that twinkle out of phase while hovered */
+  .pcard__tiles { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 0.3s var(--ease);
+    display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(5, 1fr); gap: 1px; }
+  .pcard:hover .pcard__tiles { opacity: 1; }
+  .pcard__tiles i { background: rgba(255,255,255,0.14); opacity: 0;
+    animation-duration: 6s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+  .pcard:hover .pcard__tiles i { animation-name: tileShimmer; }
+  @keyframes tileShimmer { 0%, 100% { opacity: 0; } 45% { opacity: 1; } }
+  /* soft glow that materialises from the top on hover */
+  .pcard__shine { position: absolute; inset: 0; z-index: 1; border-radius: inherit; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s var(--ease); }
+  .pcard__shine::before { content: ""; position: absolute; left: 50%; bottom: 52%; width: 150%; padding-bottom: 150%; border-radius: 50%;
+    transform: translateX(-50%); filter: blur(38px); opacity: 0.5;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.55), rgba(200,204,210,0.16) 45%, transparent 66%); }
+  .pcard:hover .pcard__shine { opacity: 1; }
+
+  .pcard__in { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; }
+  .pcard__year { font-family: var(--mono); font-size: 0.78rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+  .pcard__title { font-family: var(--display); font-weight: 600; font-size: clamp(1.3rem, 2.4vw, 1.7rem); letter-spacing: -0.02em; line-height: 1.1; margin: 14px 0 10px; }
+  .pcard__desc { color: var(--muted); font-size: 0.98rem; line-height: 1.5; text-wrap: pretty; }
+  .pcard__go { margin-top: auto; padding-top: 20px; display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.04em; color: var(--faint); transition: color 0.3s var(--ease); }
+  .pcard__go .ar { transition: transform 0.4s var(--spring); }
+  .pcard:hover .pcard__go { color: var(--text); }
+  .pcard:hover .pcard__go .ar { transform: translate(3px, -3px); }
 
   /* ------------------------------- About ------------------------------- */
   .about { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
-  .portrait {
-    aspect-ratio: 4 / 5; border-radius: 22px; background: var(--bg-2);
-    display: grid; place-items: center; text-align: center; color: var(--faint);
-    font-family: var(--mono); font-size: 0.72rem; line-height: 1.8; padding: 22px;
-    box-shadow: 0 30px 70px rgba(0,0,0,0.4); overflow: hidden;
+  .dotcard {
+    position: relative; aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden;
+    border: 1px solid var(--line); background: radial-gradient(120% 100% at 50% 0%, #16181c, #0e0f12);
+    display: grid; place-items: center; box-shadow: 0 30px 70px rgba(0,0,0,0.4);
   }
+  .dotcard__grid { position: absolute; inset: 9%; display: grid; place-items: center;
+    grid-template-columns: repeat(var(--cols, 10), 1fr); grid-template-rows: repeat(var(--rows, 13), 1fr); }
+  .dotcard__grid b { display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--faint);
+    transform: scale(var(--s, 0.55)); transition: transform 0.16s ease-out, background 0.16s ease-out; will-change: transform; }
+  .dotcard__logo { position: relative; z-index: 2; width: 46%; pointer-events: none; user-select: none;
+    filter: saturate(1.1) drop-shadow(0 12px 34px rgba(0,0,0,0.55)); }
   .about-body p { color: var(--muted); font-size: 1.16rem; max-width: 60ch; text-wrap: pretty; margin-bottom: 22px; }
   .about-body p.lead { font-family: var(--display); font-weight: 500; font-size: clamp(1.5rem, 3.4vw, 2.2rem); line-height: 1.15; letter-spacing: -0.02em; color: var(--text); margin-bottom: 30px; }
   .about-body p strong { color: var(--text); font-weight: 600; }
-  @media (max-width: 760px) { .about { grid-template-columns: 1fr; gap: 30px; } .portrait { max-width: 300px; } }
+  @media (max-width: 760px) { .about { grid-template-columns: 1fr; gap: 30px; } .dotcard { max-width: 300px; } }
 
   /* ------------------------------- Contact ------------------------------- */
   .contact h2 { font-family: var(--display); font-size: clamp(2.8rem, 10vw, 7rem); font-weight: 700; letter-spacing: -0.05em; line-height: 0.92; text-wrap: balance; margin-bottom: 40px; max-width: 14ch; padding-bottom: 0.05em; }
@@ -242,6 +268,7 @@
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; transition: none; }
     .nav__logo-img { transition: none; }
+    .pcard__tiles i { animation: none !important; }
     * { transition: none !important; }
   }
 
@@ -317,9 +344,11 @@
   <main id="top">
     <!-- ============ HERO ============ -->
     <section class="hero" aria-label="Intro">
-      <video class="hero__vid" muted loop playsinline preload="auto" poster="img/tribal-hero.png" aria-hidden="true">
-        <source src="img/spin.mp4" type="video/mp4">
-      </video>
+      <div class="hero__vidwrap" aria-hidden="true">
+        <video class="hero__vid" muted playsinline preload="auto" poster="img/tribal-hero.png">
+          <source src="img/spin.mp4" type="video/mp4">
+        </video>
+      </div>
       <div class="wrap hero__inner">
         <div class="hero__meta reveal">
           <span>IT Engineer</span>
@@ -345,39 +374,48 @@
       <img class="sec-bg sec-bg--work" src="img/tribal-a.png" alt="" aria-hidden="true" loading="lazy">
       <div class="wrap">
         <h2 class="head reveal">Ausgewählte <em>Arbeiten</em></h2>
-        <ul class="work">
-          <li class="proj reveal">
-            <a href="#">
-              <span class="proj__title">Ticket Intelligence <span class="ar" aria-hidden="true">&#8599;</span></span>
-              <span class="proj__year">2025</span>
-              <p class="proj__desc">Keyword-Suche, die pro Queue und Kunde die relevantesten aktiven Tickets an die Oberfläche holt, statt sich durch endlose Listen zu klicken.</p>
-            </a>
-          </li>
-          <li class="proj reveal">
-            <a href="#">
-              <span class="proj__title">Infrastruktur-Toolkit <span class="ar" aria-hidden="true">&#8599;</span></span>
-              <span class="proj__year">2024</span>
-              <p class="proj__desc">Kleine Go-Services und Skripte, die wiederkehrende Ops-Arbeit wegnehmen und Deployments berechenbar machen.</p>
-            </a>
-          </li>
-          <li class="proj reveal">
-            <a href="#">
-              <span class="proj__title">Applied Machine Learning <span class="ar" aria-hidden="true">&#8599;</span></span>
-              <span class="proj__year">2023</span>
-              <p class="proj__desc">Experimente und Studienprojekte rund um Modelle, Feature-Pipelines und saubere, reproduzierbare Auswertungen.</p>
-            </a>
-          </li>
-        </ul>
+        <div class="pgrid">
+          <a class="pcard reveal" href="#">
+            <div class="pcard__tiles" aria-hidden="true"></div>
+            <div class="pcard__shine" aria-hidden="true"></div>
+            <div class="pcard__in">
+              <span class="pcard__year">2025</span>
+              <h3 class="pcard__title">Ticket Intelligence</h3>
+              <p class="pcard__desc">Keyword-Suche, die pro Queue und Kunde die relevantesten aktiven Tickets an die Oberfläche holt, statt sich durch endlose Listen zu klicken.</p>
+              <span class="pcard__go">Ansehen <span class="ar" aria-hidden="true">&#8599;</span></span>
+            </div>
+          </a>
+          <a class="pcard reveal d1" href="#">
+            <div class="pcard__tiles" aria-hidden="true"></div>
+            <div class="pcard__shine" aria-hidden="true"></div>
+            <div class="pcard__in">
+              <span class="pcard__year">2024</span>
+              <h3 class="pcard__title">Infrastruktur-Toolkit</h3>
+              <p class="pcard__desc">Kleine Go-Services und Skripte, die wiederkehrende Ops-Arbeit wegnehmen und Deployments berechenbar machen.</p>
+              <span class="pcard__go">Ansehen <span class="ar" aria-hidden="true">&#8599;</span></span>
+            </div>
+          </a>
+          <a class="pcard reveal d2" href="#">
+            <div class="pcard__tiles" aria-hidden="true"></div>
+            <div class="pcard__shine" aria-hidden="true"></div>
+            <div class="pcard__in">
+              <span class="pcard__year">2023</span>
+              <h3 class="pcard__title">Applied Machine Learning</h3>
+              <p class="pcard__desc">Experimente und Studienprojekte rund um Modelle, Feature-Pipelines und saubere, reproduzierbare Auswertungen.</p>
+              <span class="pcard__go">Ansehen <span class="ar" aria-hidden="true">&#8599;</span></span>
+            </div>
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- ============ ABOUT ============ -->
     <section class="block" id="about" aria-label="Über mich">
+      <img class="sec-bg sec-bg--about" src="img/tribal-hero.png" alt="" aria-hidden="true" loading="lazy">
       <div class="wrap about">
-        <div class="portrait reveal">
-          [ Portrait
-          <br>4:5, z.B.
-          <br>/static/me.jpg ]
+        <div class="dotcard reveal" id="dotcard">
+          <div class="dotcard__grid" id="dotgrid" aria-hidden="true"></div>
+          <img class="dotcard__logo" src="img/chrome_star.png" alt="Giulian Giger">
         </div>
         <div class="about-body reveal d1">
           <p class="lead">Ich arbeite dort am liebsten, wo solide Systeme auf gute Daten treffen.</p>
@@ -395,7 +433,7 @@
         <div class="ide reveal d1">
           <div class="ide__bar">
             <div class="ide__title">giulian-giger / lab</div>
-            <a class="ide__gh" href="https://github.com/giuligi04" target="_blank" rel="noopener" aria-label="GitHub Profil">
+            <a class="ide__gh" href="https://github.com/giulian-coding" target="_blank" rel="noopener" aria-label="GitHub Profil">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.34.85 0 1.7.12 2.5.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.16.58.67.48A10.02 10.02 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg>
               GitHub
             </a>
@@ -435,10 +473,10 @@
       <div class="wrap">
         <h2 class="reveal">Lass uns etwas bauen.</h2>
         <div class="reveal d1">
-          <a class="big-mail" href="mailto:giuligi04@gmail.com">giuligi04@gmail.com</a>
+          <a class="big-mail" href="mailto:giulian.giger@icloud.com">giulian.giger@icloud.com</a>
           <div class="also">
-            <a class="tlink" href="https://github.com/giuligi04" target="_blank" rel="noopener">GitHub</a>
-            <a class="tlink" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="tlink" href="https://github.com/giulian-coding" target="_blank" rel="noopener">GitHub</a>
+            <a class="tlink" href="https://www.linkedin.com/in/giulian-giger-ch" target="_blank" rel="noopener">LinkedIn</a>
           </div>
         </div>
       </div>
@@ -451,6 +489,9 @@
       <span>IT Engineer, Cloud &amp; Data</span>
     </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
   <script>
     (function () {
@@ -509,32 +550,82 @@
         magnet.addEventListener("pointerleave", function () { magnet.style.transform = ""; });
       }
 
-      // Spinning-model video: play only when motion is welcome (else the poster stays)
+      // Spinning-model video is scroll-scrubbed (see GSAP below), never autoplayed.
       var heroVid = document.querySelector(".hero__vid");
-      if (heroVid && !reduce) { var pv = heroVid.play(); if (pv && pv.catch) pv.catch(function () {}); }
-
-      // Subtle parallax on pointer move (replaces the constant float)
-      var pLayers = [
-        { el: heroVid, base: "translateY(-50%)", depth: 22 },
-        { el: document.querySelector(".sec-bg--work"), base: "", depth: 34 },
-        { el: document.querySelector(".sec-bg--contact"), base: "", depth: 28 }
-      ].filter(function (l) { return l.el; });
-      if (!reduce && pLayers.length && window.matchMedia("(pointer:fine)").matches) {
-        var mx = 0, my = 0, ticking = false;
-        window.addEventListener("pointermove", function (e) {
-          mx = (e.clientX / window.innerWidth - 0.5);
-          my = (e.clientY / window.innerHeight - 0.5);
-          if (!ticking) {
-            ticking = true;
-            requestAnimationFrame(function () {
-              pLayers.forEach(function (l) {
-                l.el.style.transform = (l.base ? l.base + " " : "") + "translate3d(" + (mx * l.depth).toFixed(1) + "px," + (my * l.depth).toFixed(1) + "px,0)";
-              });
-              ticking = false;
-            });
-          }
-        }, { passive: true });
+      if (heroVid) {
+        heroVid.pause();
+        if (reduce) {
+          var vw = document.querySelector(".hero__vidwrap");
+          if (vw) vw.style.position = "absolute";
+          heroVid.addEventListener("loadedmetadata", function () { heroVid.currentTime = (heroVid.duration || 7) * 0.4; });
+        }
       }
+
+      // Scroll parallax via GSAP ScrollTrigger (moderate). No mouse tracking.
+      if (!reduce && window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        if (heroVid) {
+          // Scroll drives the video: first half of the page scrubs it 0 -> end
+          // (down = forward, up = reverse), then it glides up out of the viewport.
+          var vtl = gsap.timeline({
+            scrollTrigger: {
+              trigger: document.body, start: "top top",
+              end: function () { return "+=" + (ScrollTrigger.maxScroll(window) * 0.5); },
+              scrub: true, invalidateOnRefresh: true
+            }
+          });
+          vtl.fromTo(heroVid, { currentTime: 0 }, { currentTime: function () { return heroVid.duration || 7; }, ease: "none", duration: 0.8 }, 0);
+          vtl.to(".hero__vidwrap", { yPercent: -45, opacity: 0, ease: "none", duration: 0.2 }, 0.8);
+          heroVid.addEventListener("loadedmetadata", function () { ScrollTrigger.refresh(); });
+          window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+        }
+        gsap.utils.toArray(".sec-bg").forEach(function (el, i) {
+          var dir = (i % 2 === 0) ? 1 : -1;
+          gsap.fromTo(el, { y: -170 * dir }, {
+            y: 170 * dir, ease: "none",
+            scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: 1 }
+          });
+        });
+      }
+
+      // Project cards: fill each with tiles that twinkle out of phase (shimmer)
+      document.querySelectorAll(".pcard__tiles").forEach(function (t) {
+        for (var k = 0; k < 30; k++) {
+          var el = document.createElement("i");
+          el.style.animationDelay = (-(Math.random() * 6)).toFixed(2) + "s";
+          t.appendChild(el);
+        }
+      });
+
+      // About card: dot grid whose dots grow toward the cursor (proximity)
+      (function () {
+        var grid = document.getElementById("dotgrid");
+        var card = document.getElementById("dotcard");
+        if (!grid || !card) return;
+        var COLS = 10, ROWS = 13, dots = [];
+        grid.style.setProperty("--cols", COLS);
+        grid.style.setProperty("--rows", ROWS);
+        for (var i = 0; i < COLS * ROWS; i++) { var b = document.createElement("b"); grid.appendChild(b); dots.push(b); }
+        if (reduce || !window.matchMedia("(pointer:fine)").matches) return;
+        var centers = null, raf = null, last = null;
+        function measure() { centers = dots.map(function (b) { return { x: b.offsetLeft + b.offsetWidth / 2, y: b.offsetTop + b.offsetHeight / 2 }; }); }
+        function apply() {
+          raf = null;
+          if (!centers) measure();
+          var gr = grid.getBoundingClientRect();
+          var mx = last.clientX - gr.left, my = last.clientY - gr.top, R = 115;
+          for (var i = 0; i < dots.length; i++) {
+            var dx = centers[i].x - mx, dy = centers[i].y - my;
+            var t = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / R);
+            dots[i].style.setProperty("--s", (0.5 + t * t * 2.3).toFixed(2));
+            dots[i].style.background = t > 0.06 ? "var(--accent)" : "";
+          }
+        }
+        card.addEventListener("pointermove", function (e) { last = e; if (!raf) raf = requestAnimationFrame(apply); }, { passive: true });
+        card.addEventListener("pointerleave", function () { dots.forEach(function (b) { b.style.setProperty("--s", "0.5"); b.style.background = ""; }); });
+        window.addEventListener("resize", function () { centers = null; });
+        measure();
+      })();
     })();
   </script>
 

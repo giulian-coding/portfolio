@@ -1,0 +1,35 @@
+---
+import '../styles/global.css'
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!doctype html>
+<html lang="de" class="m-0 h-full w-full bg-[#121212] text-white">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Giulian Giger – IT System Engineer & Data Science Student</title>
+		<meta name="description" content="Portfolio von Giulian Giger: IT System Engineer und Data-Science-Student aus der Schweiz. Backend-Entwicklung in Go, Cloud-Infrastruktur, Microsoft 365 und Azure." />
+		<meta property="og:title" content="Giulian Giger – Portfolio" />
+		<meta property="og:description" content="IT System Engineer & Data-Science-Student. Go, Cloud-Infrastruktur, Azure." />
+		<meta property="og:type" content="website" />
+		<meta name="theme-color" content="#121212" />
+		<script is:inline>document.documentElement.classList.add('js');</script>
+	</head>
+	<body class="m-0 min-h-screen w-full bg-[#121212] text-white">
+	<Header />
+	<main class="flex min-h-screen flex-col">
+		<slot />
+		<div class="flex-1"><div class="section-container h-full py-0"></div></div>
+		<Footer />
+	</main>
+	<script>
+		import '../scripts/animations';
+	</script>
+	</body>
+</html>

@@ -1,0 +1,79 @@
+---
+// src/components/TechStack.astro
+// Tech-Stack-Raster mit Logos aus `simple-icons` (liefert SVG-Pfad + Markenfarbe)
+// plus eigene Icons aus `src/data/customIcons.ts` für Marken, die dort fehlen.
+// Standard grau, beim Hover erscheint die Markenfarbe.
+// Neue Technologie: Icon unten importieren und in `stack` eintragen.
+// Die Reihenfolge im Array ist die Reihenfolge im Raster.
+import {
+    siGo,
+    siPython,
+    siKubernetes,
+    siDocker,
+    siLinux,
+    siNginx,
+    siNatsdotio,
+    siGit,
+} from 'simple-icons';
+import {
+    icWindowsServer,
+    icAzure,
+    icAzureDevOps,
+    icM365,
+    icIntune,
+    icPowerShell,
+    icSSL,
+} from '../data/customIcons';
+
+const stack = [
+    // Sprachen
+    siGo,
+    siPython,
+    icPowerShell,
+    // Microsoft
+    icWindowsServer,
+    icAzure,
+    icAzureDevOps,
+    icM365,
+    icIntune,
+    // Infrastruktur
+    siKubernetes,
+    siDocker,
+    siLinux,
+    siNginx,
+    siNatsdotio,
+    icSSL,
+    siGit,
+];
+---
+
+<ul data-reveal class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-neutral-800 bg-neutral-800/80 sm:grid-cols-3 md:grid-cols-5">
+    {stack.map((icon) => (
+        <li
+            class="group flex flex-col items-center justify-center gap-3 bg-[#121212] p-6 text-neutral-500 transition-colors duration-300 hover:bg-neutral-900/60 hover:text-(--brand)"
+            style={`--brand: #${icon.hex}`}
+        >
+            {/* simple-icons haben path UND svg – path (einfarbig, currentColor) hat Vorrang */}
+            {icon.path ? (
+                <svg
+                    role="img"
+                    aria-label={icon.title}
+                    viewBox="0 0 24 24"
+                    class="h-8 w-8 fill-current transition-transform duration-300 group-hover:scale-110"
+                >
+                    <path d={icon.path} fill-rule="evenodd" />
+                </svg>
+            ) : (
+                <div
+                    role="img"
+                    aria-label={icon.title}
+                    class="h-8 w-8 opacity-60 grayscale transition-all duration-300 group-hover:scale-110 group-hover:opacity-100 group-hover:grayscale-0 [&>svg]:h-full [&>svg]:w-full"
+                    set:html={icon.svg}
+                />
+            )}
+            <span class="text-xs font-medium text-neutral-400 transition-colors group-hover:text-white">
+                {icon.title}
+            </span>
+        </li>
+    ))}
+</ul>

@@ -1,0 +1,117 @@
+---
+// src/components/Header.astro
+
+interface NavItem {
+    label: string;
+    href: string;
+}
+
+import { siGithub } from 'simple-icons';
+
+const githubUrl = 'https://github.com/giulian-coding';
+
+const navItems: NavItem[] = [
+    { label: 'Über mich', href: '#about' },
+    { label: 'Projekte', href: '#projects' },
+    { label: 'Tech Stack', href: '#skills' },
+    { label: 'Kontakt', href: '#contact' },
+];
+
+---
+
+<!-- Über dem Hero transparent; sobald der Hero unter dem Header durch ist, setzt das Script
+     data-scrolled und der Header bekommt Hintergrund, Blur und Linien -->
+<header
+    id="site-header"
+    class="group sticky top-0 z-50 w-full border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-300 data-[scrolled]:border-neutral-800/80 data-[scrolled]:bg-[#121212]/80 data-[scrolled]:backdrop-blur-md [&:not([data-scrolled])_.ghost-btn]:text-white/85"
+>
+    <div class="mx-auto flex h-16 w-full max-w-5xl items-center justify-between border-x border-transparent px-6 transition-colors duration-300 group-data-[scrolled]:border-neutral-800/80">
+
+        <!-- Logo / zurück nach oben -->
+        <a href="#hero" aria-label="Zum Seitenanfang" class="ghost-btn mr-2 w-9 px-0 font-mono text-base font-semibold text-white">
+            G
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden items-center gap-1 md:flex">
+            {navItems.map((item) => (
+                <a href={item.href} class="ghost-btn">{item.label}</a>
+            ))}
+        </nav>
+
+        <!-- Kontakt & Mobile Toggle -->
+        <div class="ml-auto flex items-center gap-2">
+            <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub Profil"
+                class="ghost-btn w-9 px-0"
+            >
+                <svg role="img" viewBox="0 0 24 24" class="h-5 w-5 fill-current"><path d={siGithub.path} /></svg>
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button
+                id="mobile-menu-btn"
+                type="button"
+                aria-label="Menü umschalten"
+                aria-expanded="false"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-neutral-800/80 hover:text-white md:hidden"
+            >
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <!-- Folgt dem Header-Zustand: über dem Hero transparent, danach Glas-Hintergrund -->
+    <div id="mobile-menu" class="absolute inset-x-0 top-full hidden border-t border-transparent transition-colors duration-300 group-data-[scrolled]:border-neutral-800/80 group-data-[scrolled]:bg-[#121212]/90 group-data-[scrolled]:backdrop-blur-md md:hidden">
+        <nav class="mx-auto flex w-full max-w-5xl flex-col gap-1 border-x border-transparent px-6 py-4 transition-colors duration-300 group-data-[scrolled]:border-neutral-800/80">
+            {navItems.map((item) => (
+                <a href={item.href} class="ghost-btn justify-start">{item.label}</a>
+            ))}
+        </nav>
+    </div>
+</header>
+
+<script>
+    // Header-Zustand: transparent, solange der Hero noch unter dem Header liegt
+    const header = document.getElementById('site-header');
+    const hero = document.getElementById('hero');
+    let ticking = false;
+    const updateHeader = () => {
+        ticking = false;
+        const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+        header?.toggleAttribute('data-scrolled', heroBottom <= 64);
+    };
+    window.addEventListener('scroll', () => {
+        if (!ticking) { ticking = true; requestAnimationFrame(updateHeader); }
+    }, { passive: true });
+    updateHeader();
+
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const iconPath = document.getElementById('menu-icon-path');
+
+    // SVG Pfade für das Hamburger-Icon und das X-Icon
+    const menuIcon = "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5";
+    const closeIcon = "M6 18L18 6M6 6l12 12";
+
+    const setOpen = (open: boolean) => {
+        menu?.classList.toggle('hidden', !open);
+        btn?.setAttribute('aria-expanded', String(open));
+        iconPath?.setAttribute('d', open ? closeIcon : menuIcon);
+    };
+
+    btn?.addEventListener('click', () => {
+        setOpen(menu?.classList.contains('hidden') ?? false);
+    });
+
+    // Menü schließen, wenn ein Link angeklickt wird
+    menu?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => setOpen(false));
+    });
+</script>

@@ -1,0 +1,50 @@
+---
+// src/components/Contact.astro
+// Inhalt der Kontakt-Sektion – wird in index.astro in <Section id="contact"> gerendert.
+import { siGithub } from 'simple-icons';
+import { icLinkedIn, icMail } from '../data/customIcons';
+import happyRobot from '../assets/3d-stickle-happy-retro-robot.webm';
+
+const email = 'giulian.giger@icloud.com';
+
+const links = [
+    { label: 'E-Mail', href: `mailto:${email}`, icon: icMail, external: false },
+    { label: 'GitHub', href: 'https://github.com/giulian-coding', icon: siGithub, external: true },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/giulian-giger-ch', icon: icLinkedIn, external: true },
+];
+---
+
+<div data-reveal class="grid items-center gap-12 md:grid-cols-5">
+  <div class="md:col-span-3">
+    <p class="max-w-xl text-neutral-400">
+        Ob Projekt, Frage oder einfach ein Austausch. Schreib mir, ich melde mich zeitnah.
+    </p>
+
+    <!-- Kanäle als Ghost-Buttons -->
+    <div class="mt-10 flex flex-wrap gap-2">
+        {links.map(({ label, href, icon, external }) => (
+            <a
+                href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                class="ghost-btn -ml-4 border border-transparent hover:border-neutral-800"
+            >
+                <svg role="img" aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 fill-current"><path d={icon.path} /></svg>
+                {label}
+            </a>
+        ))}
+    </div>
+  </div>
+
+  <!-- Visual -->
+  <div class="hidden items-center justify-center md:col-span-2 md:flex">
+    <video
+        src={happyRobot}
+        autoplay
+        muted
+        loop
+        playsinline
+        class="w-full max-w-xs drop-shadow-2xl"
+    ></video>
+  </div>
+</div>

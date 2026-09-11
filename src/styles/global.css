@@ -1,0 +1,56 @@
+@import "tailwindcss";
+/* Variable Fonts (wght 100–900) – nötig für die Proximity-Animation im Hero */
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+/* Display-Font für den Hero-Titel (Partikel-Text), wght 300–900 */
+@import "@fontsource-variable/red-hat-display";
+
+html {
+    font-family: "Geist Variable", system-ui, sans-serif;
+}
+
+.font-display {
+    font-family: "Red Hat Display Variable", "Geist Variable", system-ui, sans-serif;
+}
+
+code,
+pre,
+.font-mono {
+    font-family: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/*
+ * Zentrierter Inhalts-Container mit vertikalen Linien.
+ * An EINER Stelle definiert, damit Header, Sektionen und Footer
+ * exakt dieselbe Breite haben und die Linien bündig übereinander liegen.
+ */
+@utility section-container {
+    @apply mx-auto w-full max-w-5xl border-x border-neutral-800/80 px-6 py-12;
+}
+
+
+/*
+ * Ghost-Button, wie im Header. Wird auch in den Projekt-Karten verwendet,
+ * damit alle Buttons der Seite identisch aussehen.
+ */
+@utility ghost-btn {
+    @apply inline-flex h-9 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium text-neutral-400 transition-colors
+        hover:bg-neutral-800/80 hover:text-white
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212];
+}
+
+/*
+ * Scroll-Animationen (siehe src/scripts/animations.ts).
+ * Startzustand nur setzen, wenn JS läuft – sonst bleibt alles sichtbar.
+ */
+/* Bei "stagger" werden nur die Kinder animiert – der Container selbst muss sichtbar bleiben */
+html.js [data-hero],
+html.js [data-reveal]:not([data-reveal="stagger"]),
+html.js [data-reveal="stagger"] > * {
+    opacity: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4rem; /* Höhe des sticky Headers */
+}

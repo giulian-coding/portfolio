@@ -1,0 +1,52 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import aiRobot from '../assets/3d-stickle-ai-robot-assistant.webm';
+import serverCube from '../assets/3d-stickle-network-server-cube-with-colorful-stickers-on-top.webm';
+import oldComputer from '../assets/3d-stickle-old-computer-with-stickers.webm';
+
+const projects = [
+    {
+        title: "Ion - Personal Assistance System",
+        description: "In Bearbeitung - Ein internes perfomrantes Assistenz-System, welches Home Lab Jobs übernehmen kann. Bis jetzt ist das lightweight Queueing System eingerichtet, um Jobs durch Worker persistent abzuarbeiten.",
+        tags: ["Go", "Concurrency", "NATS"],
+        link: "https://github.com/giulian-coding/Ion",
+        size: "lg",
+        video: aiRobot,
+    },
+    {
+        title: "Zentraler DevOps Skript Server",
+        description: "Eine Lösung, welche Erstellte firmeninterne Skripte zerntral und Versioniert in Azure DevOps abspeichert, und via CD Pipeline auf einen On-Prem Server kopiert. Dies erhöht die Übersicht aller internen Skripte massiv.",
+        tags: ["DevOps", "YAML", "Windows Server"],
+        size: "sm",
+        dots: true,
+    },
+    {
+        title: "Azure Files",
+        description: "Umsetzung von Azure Files Shares mit automatischer Integrierung via Intune und Cloud Kerberos Authentifizierung.",
+        tags: ["Azure", "Intune", "Client", "Kerberos"],
+        size: "sm",
+        dots: true,
+    },
+    {
+        title: "Portfolio",
+        description: "Ein Portfolio, welches meine Fähigkeiten als IT System Engineer und Software Engineer aufzeigt. Gehostet auf Cloudflare. Es wurde mit dem Astro Framework erstellt.",
+        tags: ["Web", "Astro", "Cloudflare"],
+        link: "https://github.com/giulian-coding/portfolio",
+        size: "md",
+    },
+    {
+        title: "Containers",
+        description: "Ein lightweight Docker-Klon, welcher in Linux Umgebungen läuft.",
+        tags: ["Go", "Low-Level", "Linux"],
+        link: "https://github.com/giulian-coding/Containers",
+        size: "md",
+        video: serverCube,
+    },
+] as const;
+---
+
+<div data-reveal="stagger" class="grid grid-cols-1 gap-4 md:grid-cols-6 md:auto-rows-[minmax(220px,auto)]">
+    {projects.map((p) => (
+        <ProjectCard {...p} />
+    ))}
+</div>

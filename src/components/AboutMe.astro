@@ -1,0 +1,51 @@
+---
+// src/components/AboutMe.astro
+import oldComputer from '../assets/3d-stickle-old-computer-with-stickers.webm';
+
+const hobbies = ['Fussball', 'Gym', 'Motorrad fahren', 'Filme schauen'];
+---
+
+<div data-reveal="stagger" class="grid gap-12 md:grid-cols-5">
+    <!-- Text -->
+    <div class="md:col-span-3">
+        <h3 class="text-3xl font-semibold tracking-tight md:text-2xl">
+            IT System Engineer &amp; Data-Science-Student mit einer Leidenschaft für Go.
+        </h3>
+
+        <div class="mt-6 space-y-4 text-neutral-400 leading-relaxed">
+            <p>
+                Ich bin Giulian, System Engineer und angehender Data Scientist aus der Schweiz.
+                Tagsüber halte ich M365-Umgebungen und Cloud-Infrastruktur am Laufen.
+                Daneben baue ich am liebsten Backend-Systeme, die skalieren, sauber
+                strukturiert sind.
+            </p>
+            <p>
+                Was mich antreibt, ist der Punkt, an dem Infrastruktur und Software sich treffen:
+                Cloud-native Technologien, effiziente Applikationsarchitekturen und Go als Werkzeug,
+                um daraus etwas Robustes zu bauen.
+            </p>
+        </div>
+
+        <!-- Abseits vom Bildschirm -->
+        <div class="mt-8">
+            <p class="font-mono text-xs uppercase tracking-widest text-neutral-500">Abseits vom Bildschirm</p>
+            <ul class="mt-3 flex flex-wrap gap-1.5">
+                {hobbies.map((h) => (
+                    <li class="rounded-md border border-neutral-800 bg-neutral-900 px-2.5 py-1 text-sm text-neutral-300">{h}</li>
+                ))}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Visual -->
+    <div class="hidden items-center justify-center md:col-span-2 md:flex">
+        <video
+            src={oldComputer}
+            autoplay
+            muted
+            loop
+            playsinline
+            class="w-full max-w-xs drop-shadow-2xl"
+        ></video>
+    </div>
+</div>

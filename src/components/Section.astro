@@ -1,0 +1,20 @@
+---
+// src/components/Section.astro
+// Full-width Sektion mit durchgehender Trennlinie unten (border-b) und
+// zentriertem Inhalts-Container mit vertikalen Linien (border-x).
+// Weil alle Sektionen nahtlos untereinander liegen, wirken die
+// vertikalen Linien durchgehend über die ganze Seite.
+
+interface Props {
+    id?: string;
+    class?: string;
+}
+
+const { id, class: className } = Astro.props;
+---
+
+<section id={id} class="w-full border-b border-neutral-800/80">
+    <div class:list={["section-container", className]}>
+        <slot />
+    </div>
+</section>
